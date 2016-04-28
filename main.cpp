@@ -7,7 +7,7 @@
 
 #include "util/util.h"
 #include "datastream/datastream.h"
-#include "orthogonal/orthogonal.h"
+#include "quadruple/orthogonal.h"
 
 void construction_main(string _data_f, stringstream& _ss, int win_size);
 

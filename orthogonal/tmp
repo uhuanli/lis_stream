@@ -1,8 +1,0 @@
-		cout << "--maxgap:" << endl << this->maxgap_str() << endl;
-		cout << "--mingap:" << endl << this->mingap_str() << endl;
-		cout << "--maxweight:" << endl << this->maxweight_str() << endl;
-		cout << "--minweight:" << endl << this->minweight_str() << endl;
-		cout << "--maxfirst:" << endl << this->maxfirst_str() << endl;
-		cout << "--minfirst:" << endl << this->minfirst_str() << endl;
-		cout << "--maxlast:" << endl << this->maxlast_str() << endl;
-		cout << "--minlast:" << endl << this->minlast_str() << endl;
