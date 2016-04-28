@@ -117,8 +117,8 @@ void util::initial(){
 	LARGE_INTEGER m_nFreq;
 	QueryPerformanceFrequency(&m_nFreq);
 	util::ACCURRACY = (double)m_nFreq.QuadPart;
-	util::exp_home = "D:/Lab/experiments/lis_constraints/";
-	util::update_times = 200;
+	util::exp_home = "./";
+	util::update_times = 4000;
 
 	string runlog_f = util::exp_home + "log/";
 	string flog_f = runlog_f + "flog.log";
