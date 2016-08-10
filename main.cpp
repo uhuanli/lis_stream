@@ -17,25 +17,17 @@
 #include "quadruple/quadruple.h"
 
 void construction_main(string _data_f, stringstream& _ss, int win_size);
-void stream_main(string _data_f, stringstream& _ss, int win_size);
 void console_run();
 
 int main(int argc, char* args[])
 {
-	if(false)
-	{
-		orthogonal otg(100);
-		cout << sizeof(otg) << ",tosz:" << otg.to_size() << endl;
-		return 0;
-	}
-//	cout << "::::main" << endl;
+	cout << "::::main" << endl;
 	stringstream _ss;
 	for(int i = 1; i < argc; i ++)
 	{
 		_ss << args[i] << " ";
 	}
-	int win_size = 15;
-	util::run_mode = 6;
+	int win_size = 0;
 	int data_set = 0;
 
 	util::initial();
@@ -158,11 +150,6 @@ int main(int argc, char* args[])
 			range rlis(win_size, Li, Ui, Lv, Uv);
 			rlis.run(_data_f);
 		}
-
-//		long long int total_end = util::get_time_cur();
-
-//		long total_time = util::cal_time(total_end, total_begin);
-//		cout << "Total: " << total_time/1000.0 << " ms" << endl;
 	}
 	else
 	{
@@ -311,11 +298,6 @@ void construction_main(string _data_f, stringstream& _ss, int win_size){
 		cout << "range\tspace\t" << isize/1000.0 << "\ttime\t";
 		cout << "(" << Vds.size() << ", " << tcost/1000.0 << ")" << endl;
 	}
-}
-
-void stream_main(string _data_f, stringstream& _ss, int win_size)
-{
-
 }
 
 void console_run()

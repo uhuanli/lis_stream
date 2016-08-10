@@ -5,7 +5,6 @@
  *      Author: liyouhuan
  */
 #include "util.h"
-#include "stopwords.h"
 #include "windows.h"
 #include "psapi.h"
 int util::WIN_SIZE;
