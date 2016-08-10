@@ -22,7 +22,10 @@ void item::initial(int _a, int _ts){
 	this->rn = NULL;
 	this->rm_most = NULL;
 	this->lm_most = NULL;
+#ifdef INLIS
 	this->inLIS = false;
+#endif
+	this->black = false;
 	this->timestamp = _ts;
 	this->val = _a;
 	this->rlen = 0;
@@ -55,7 +58,8 @@ string item::to_str(){
 		_ss << "-1, ";
 	}
 
-	_ss << "r=" << this->rlen << "]";
+	_ss << "r=" << this->rlen << ", ";
+	_ss << "black:" << this->black << "]";
 
 	return _ss.str();
 }

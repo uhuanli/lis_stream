@@ -18,6 +18,8 @@
 #include "../util/util.h"
 using namespace std;
 
+//#define INLIS 1
+
 class item{
 public:
 	item(int _a, int _ts);
@@ -37,7 +39,10 @@ public:
 	item* rn;
 	item* rm_most;
 	item* lm_most;
+#ifdef INLIS
 	bool inLIS;
+#endif
+	bool black;
 	int timestamp;
 	int val;
 	int rlen;

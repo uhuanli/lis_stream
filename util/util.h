@@ -40,6 +40,7 @@ public:
 	static int run_mode;
 	static int update_times;
 
+	static bool opt_update;
 	static bool isconsole;
 
 	static string exp_home;
@@ -50,7 +51,7 @@ public:
 
 	static const bool debug_total = false;
 	static bool total_on_off;
-	static const bool flog_on = false;
+	static const bool flog_on = true;
 	static const bool write_track = false;
 	static const bool testdp = false;
 

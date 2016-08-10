@@ -19,6 +19,7 @@ double util::ACCURRACY;
 string util::exp_home = "./";
 int util::run_mode = 0;
 int util::update_times = 4000;
+bool util::opt_update = true;
 bool util::total_on_off = false;
 bool util::isconsole = false;
 double util::init_space = 0;
@@ -117,7 +118,7 @@ void util::initial(){
 	LARGE_INTEGER m_nFreq;
 	QueryPerformanceFrequency(&m_nFreq);
 	util::ACCURRACY = (double)m_nFreq.QuadPart;
-	util::exp_home = "./";
+	util::exp_home = "D:/Lab/experiments/lis_constraints/";
 	util::update_times = 4000;
 
 	string runlog_f = util::exp_home + "log/";
