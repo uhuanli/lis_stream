@@ -48,7 +48,7 @@ subsequence over sequential data streams. arXiv preprint
 arXiv:1604.02552, 2016.
 http://arxiv.org/abs/1604.02552.
 
-Besides, we also implemnet some comparative algorithms as follows:(Each comparative algorithms are strictly implemented according to the corresponding paper)
+Besides, we also implemnet some comparative algorithms as follows:(Each comparative algorithm is strictly implemented according to the corresponding paper)
 ## --variant from
 2. S. Deorowicz. On Some Variants of the Longest Increasing
 Subsequence Problem. Theoretical and Applied Informatics,
