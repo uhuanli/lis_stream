@@ -48,29 +48,29 @@ subsequence over sequential data streams. arXiv preprint
 arXiv:1604.02552, 2016.
 http://arxiv.org/abs/1604.02552.
 
-Besides, we also implemnet some comparative algorithms as follows:
+Besides, we also implemnet some comparative algorithms as follows:(Each comparative algorithm is strictly implemented according to the corresponding paper)
 ## --variant from
 2. S. Deorowicz. On Some Variants of the Longest Increasing
 Subsequence Problem. Theoretical and Applied Informatics,
-21(3):135每148, 2009.
+21(3):135穡C148, 2009.
 
 ## --minheight from
 3. C.-t. Tseng, C.-b. Yang, and H.-y. Ann. Minimum Height and
 Sequence Constrained Longest Increasing Subsequence. Journal of
-internet Technology, 10:173每178, 2009.
+internet Technology, 10:173穡C178, 2009.
 
 ## -- range & slope from
 4. I.-H. Yang and Y.-C. Chen. Fast algorithms for the constrained
 longest increasing subsequence problems. In Proceedings of the 25th
 Workshop on Combinatorial Mathematics and Computing Theory,
-pages 226每231, 2008.
+pages 226穡C231, 2008.
 
 ## -- canonical from
 5. E. Chen, L. Yang, and H. Yuan. Longest increasing subsequences in
 windows based on canonical antichain partition. Theoretical
-Computer Science, 378(3):223每236, June 2007.
+Computer Science, 378(3):223穡C236, June 2007.
 
 ## -- lisw from
-6. M. H. Albert, A. Golynski, A. M. Hamel, A. L車pez-Ortiz, S. Rao,
+6. M. H. Albert, A. Golynski, A. M. Hamel, A. L穡簧pez-Ortiz, S. Rao,
 and M. A. Safari. Longest increasing subsequences in sliding windows. 
-Theoretical Computer Science, 321(2-3):405每414, Aug. 2004.
+Theoretical Computer Science, 321(2-3):405穡C414, Aug. 2004.
