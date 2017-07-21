@@ -11,14 +11,15 @@
 #include<sstream>
 #include<fstream>
 using namespace std;
+#include "../util/util.h"
 class mh_item{
 public:
 	mh_item();
-	mh_item(int _val, mh_item* _pred);
-	mh_item(int _v, int _t);
+	mh_item(Vtype _val, mh_item* _pred);
+	mh_item(Vtype _v, int _t);
 	string to_str();
 	int to_size();
-	int val;
+	Vtype val;
 	mh_item* pred;
 	mh_item* next;
 	mh_item* p_most;

@@ -19,8 +19,8 @@ public:
 	// _method: 0-enum, 1-length
 	void run(string _data_f, int _method);
 	void run_dpmicrosoft();
-	int update(int _ins);
-	int construction(vector<int>& ivec);
+	int update(Vtype _ins);
+	int construction(vector<Vtype>& ivec);
 
 	string to_str();
 	int to_size();
@@ -28,11 +28,11 @@ public:
 	string enum_str();
 
 private:
-	int get_buf(int _i);
+	Vtype get_buf(int _i);
 	ditem* get_item(int _i);
 	void new_item(ditem* _it);
 	int construct();
-	int find_ins_pos(int _val);
+	int find_ins_pos(Vtype _val);
 
 	int run_method;
 	int win_size;
@@ -55,7 +55,7 @@ private:
 	runtime t_compute;
 	runtime t_total;
 
-	int* buf;
+	Vtype* buf;
 	int buf_h;
 	int buf_t;
 };

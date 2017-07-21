@@ -23,7 +23,7 @@ canonical::canonical(int _winsz){
 
 	this->buf_h = 0;
 	this->buf_t = 0;
-	this->buf = new int[this->win_size];
+	this->buf = new Vtype[this->win_size];
 }
 canonical::~canonical(){
 	delete[] this->buf;
@@ -36,6 +36,15 @@ void canonical::run(string _data_f, int _constrained){
 	string log_f = util::exp_home + "runningtime/";
 	string file_name;
 	stringstream label_type;
+	string method[] = {
+			"enum",
+			"maxgap_one",
+			"mingap_one",
+			"maxwid_one",
+			"minwid_one",
+			"maxwei_one",
+			"minwei_one"
+	};
 	{
 		int i1 = _data_f.rfind('/');
 		int i2 = _data_f.rfind('.');
@@ -46,7 +55,7 @@ void canonical::run(string _data_f, int _constrained){
 		_ss << "_" << this->win_size << "";
 		file_name = _ss.str();
 		log_f += file_name;
-		label_type << "cnl\t" << this->get_method(_constrained);
+		label_type << "cnl\t" << method[_constrained];
 		label_type << "\t" << _datatype << "\t" << this->win_size;
 	}
 	this->run_log.open(log_f.c_str(), ios::out);
@@ -99,28 +108,40 @@ string canonical::compute_str(int constrained_method){
 			_ss_comp << this->enum_str() << endl;
 			break;
 		}
-		case canonical::minh:
+		case canonical::mingap:
 		{
-			_ss_comp << "--minh:" << endl;
+			_ss_comp << "--mingap_one:" << endl;
 			_ss_comp << this->minh_str() << endl;
 			break;
 		}
-		case canonical::maxh:
+		case canonical::maxgap:
 		{
-			_ss_comp << "--maxh:" << endl;
+			_ss_comp << "--maxgap_one:" << endl;
 			_ss_comp << this->maxh_str() << endl;
 			break;
 		}
-		case canonical::minw:
+		case canonical::minwei:
 		{
-			_ss_comp << "--minw:" << endl;
+			_ss_comp << "--minwei:" << endl;
 			_ss_comp << this->minw_str() << endl;
 			break;
 		}
-		case canonical::maxw:
+		case canonical::maxwei:
 		{
-			_ss_comp << "--maxw:" << endl;
+			_ss_comp << "--maxwei:" << endl;
 			_ss_comp << this->maxw_str() << endl;
+			break;
+		}
+		case canonical::minwid:
+		{
+			_ss_comp << "--minwei:" << endl;
+			_ss_comp << this->minwid_str() << endl;
+			break;
+		}
+		case canonical::maxwid:
+		{
+			_ss_comp << "--maxwei:" << endl;
+			_ss_comp << this->maxwid_str() << endl;
 			break;
 		}
 		default :
@@ -136,14 +157,8 @@ string canonical::compute_str(int constrained_method){
 }
 
 string canonical::get_method(int constrained){
-	string method[] = {
-			"enum",
-			"minheight",
-			"maxheight",
-			"minweight",
-			"maxweight"
-	};
-	return method[constrained];
+
+	return "cnl deprecated";
 }
 
 void canonical::run_candebug(){
@@ -224,7 +239,7 @@ int canonical::update(int _ins){
 	this->timestamp ++;
 	return 0;
 }
-int canonical::construction(vector<int>& ivec)
+int canonical::construction(vector<Vtype>& ivec)
 {
 	for(int i = 0; i < ivec.size(); i ++)
 	{
@@ -313,8 +328,14 @@ string canonical::enum_str(){
 	stringstream _ss;
 	citem** S = new citem*[this->lis_len];
 	citem* cit = this->hlist[this->lis_len-1];
+	int lis_num = 0;
 	while(cit != NULL){
-		cit->enumlis(this->lis_len, 0, S, _ss);
+		cit->enumlis(this->lis_len, 0, S, _ss, lis_num);
+#ifdef ENABLE_MAX_LIS_NUM
+		if(lis_num > util::MAX_LIS_NUM)
+			break;
+#endif
+
 		cit = cit->next;
 	}
 
@@ -327,9 +348,10 @@ string canonical::minh_str(){
 	citem** S = new citem*[this->lis_len];
 	citem** Store = new citem*[this->lis_len];
 	citem* cit = this->hlist[this->lis_len-1];
-	int _val = 1 << 30;
+	Vtype _val = 1 << 30;
+	int lis_num = 0;
 	while(cit != NULL){
-		cit->enumlis_constrained(this->lis_len, 0, S, _ss, Store, canonical::minh, _val);
+		cit->enumlis_constrained(this->lis_len, 0, S, _ss, Store, canonical::mingap, _val, lis_num);
 		cit = cit->next;
 	}
 
@@ -342,9 +364,10 @@ string canonical::maxh_str(){
 	citem** S = new citem*[this->lis_len];
 	citem** Store = new citem*[this->lis_len];
 	citem* cit = this->hlist[this->lis_len-1];
-	int _val = -1;
+	Vtype _val = -1;
+	int lis_num = 0;
 	while(cit != NULL){
-		cit->enumlis_constrained(this->lis_len, 0, S, _ss, Store, canonical::maxh, _val);
+		cit->enumlis_constrained(this->lis_len, 0, S, _ss, Store, canonical::maxgap, _val, lis_num);
 		cit = cit->next;
 	}
 
@@ -357,9 +380,10 @@ string canonical::minw_str(){
 	citem** S = new citem*[this->lis_len];
 	citem** Store = new citem*[this->lis_len];
 	citem* cit = this->hlist[this->lis_len-1];
-	int _val = 2 << 30;
+	Vtype _val = 2 << 30;
+	int lis_num = 0;
 	while(cit != NULL){
-		cit->enumlis_constrained(this->lis_len, 0, S, _ss, Store, canonical::minw, _val);
+		cit->enumlis_constrained(this->lis_len, 0, S, _ss, Store, canonical::minwei, _val, lis_num);
 		cit = cit->next;
 	}
 
@@ -372,9 +396,42 @@ string canonical::maxw_str(){
 	citem** S = new citem*[this->lis_len];
 	citem** Store = new citem*[this->lis_len];
 	citem* cit = this->hlist[this->lis_len-1];
-	int _val = -1;
+	Vtype _val = -1;
+	int lis_num = 0;
 	while(cit != NULL){
-		cit->enumlis_constrained(this->lis_len, 0, S, _ss, Store, canonical::maxw, _val);
+		cit->enumlis_constrained(this->lis_len, 0, S, _ss, Store, canonical::maxwei, _val, lis_num);
+		cit = cit->next;
+	}
+
+	delete[] S;
+	delete[] Store;
+	return _ss.str();
+}
+string canonical::minwid_str(){
+	stringstream _ss;
+	citem** S = new citem*[this->lis_len];
+	citem** Store = new citem*[this->lis_len];
+	citem* cit = this->hlist[this->lis_len-1];
+	Vtype _val = 2 << 30;
+	int lis_num = 0;
+	while(cit != NULL){
+		cit->enumlis_constrained(this->lis_len, 0, S, _ss, Store, canonical::minwid, _val, lis_num);
+		cit = cit->next;
+	}
+
+	delete[] S;
+	delete[] Store;
+	return _ss.str();
+}
+string canonical::maxwid_str(){
+	stringstream _ss;
+	citem** S = new citem*[this->lis_len];
+	citem** Store = new citem*[this->lis_len];
+	citem* cit = this->hlist[this->lis_len-1];
+	Vtype _val = -1;
+	int lis_num = 0;
+	while(cit != NULL){
+		cit->enumlis_constrained(this->lis_len, 0, S, _ss, Store, canonical::maxwid, _val, lis_num);
 		cit = cit->next;
 	}
 

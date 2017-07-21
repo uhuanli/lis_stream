@@ -5,7 +5,7 @@
  *      Author: liyouhuan
  */
 #include "vitem.h"
-vitem::vitem(int _v, int _ts){
+vitem::vitem(Vtype _v, int _ts){
 	this->val = _v;
 	this->ptr = NULL;
 	this->rn = NULL;

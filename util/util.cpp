@@ -5,17 +5,18 @@
  *      Author: liyouhuan
  */
 #include "util.h"
-#include "windows.h"
-#include "psapi.h"
+#include "stopwords.h"
 int util::WIN_SIZE;
 int util::SEQ_MEM_SIZE;
 ofstream util::flog;
+LARGE_INTEGER util::m_nTime;
 ofstream util::run_track;
 ofstream util::f_num_track;
 char util::buf[util::buf_size];
 int util::PARALLEL_NUM = 1;
 double util::ACCURRACY;
 string util::exp_home = "./";
+string util::dataset;
 int util::run_mode = 0;
 int util::update_times = 4000;
 bool util::opt_update = true;
@@ -26,9 +27,8 @@ double util::init_space = 0;
 /*  */
 long long int util::get_time_cur()
 {
-	LARGE_INTEGER m_nTime;
-	QueryPerformanceCounter(&m_nTime); //获取当前时间
-	return m_nTime.QuadPart;
+	QueryPerformanceCounter(&(util::m_nTime)); //获取当前时间
+	return util::m_nTime.QuadPart;
 }
 /*micro second*/
 long util::cal_time(long long int _t1, long long int _t2){
@@ -99,6 +99,10 @@ void util::log(const char* str, const char* lat)
 	}
 	util::flog << str << lat;
 	util::flog.flush();
+#ifdef STDLOG
+	cout << str << lat;
+	cout.flush();
+#endif
 }
 
 void util::log(stringstream & _ss)
@@ -108,6 +112,10 @@ void util::log(stringstream & _ss)
 	}
 	util::flog << _ss.str();
 	util::flog.flush();
+#ifdef STDLOG
+	cout << _ss.str();
+	cout.flush();
+#endif
 }
 
 void util::initial(){
@@ -118,30 +126,34 @@ void util::initial(){
 	QueryPerformanceFrequency(&m_nFreq);
 	util::ACCURRACY = (double)m_nFreq.QuadPart;
 	util::exp_home = "D:/Lab/experiments/lis_constraints/";
-	util::update_times = 4000;
+	util::update_times = 2000;
 
+}
+
+
+void util::init_log(string _data_set)
+{
 	string runlog_f = util::exp_home + "log/";
-	string flog_f = runlog_f + "flog.log";
+	string flog_f = runlog_f + _data_set + ".log";
 	util::flog.open(flog_f.c_str(), ios::out);
 	if(! util::flog){
 		cout << "log file err： " << flog_f << endl;
 		exit(0);
 	}
 
-	string run_track_f = runlog_f + "ftrack.log";
+	string run_track_f = runlog_f + _data_set + ".track";
 	util::run_track.open(run_track_f.c_str(), ios::out);
 	if(! util::run_track){
 		cout << "track err" << endl;
 		exit(0);
 	}
 
-	string num_track_f = runlog_f + "num_track.log";
+	string num_track_f = runlog_f + _data_set + ".num_track";
 	util::f_num_track.open(num_track_f.c_str(), ios::out);
 	if(! util::f_num_track){
 		cout << "num_track err" << endl;
 		exit(0);
 	}
-
 }
 
 void util::track(const char* str, const char* lat)

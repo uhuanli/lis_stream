@@ -16,7 +16,7 @@ range::range(int _winsz, int _Li, int _Ui, double _Lv, double _Uv){
 	this->Uv = _Uv;
 	this->timestamp = 0;
 	this->lis_len = 0;
-	this->buf = new int[_winsz];
+	this->buf = new Vtype[_winsz];
 	this->buf_h = 0;
 	this->buf_t = 0;
 	this->pool_used = 0;
@@ -114,7 +114,7 @@ void range::run_microsoft(int _winsz){
 	string synthetic = "synthetic_part.dat";
 	string dataset = microsoft;
 	datastream ds(dataset);
-	orthogonal otg(_winsz);
+	qnlist otg(_winsz);
 	int count_diff = 0;
 	int count_total = 0;
 	while(ds.hasnext())
@@ -166,7 +166,7 @@ void range::run_microsoft(int _winsz){
 	cout.flush();
 }
 
-int range::update(int _ins){
+int range::update(Vtype _ins){
 	this->pool_used = 0;
 	for(int i = 0; i < this->win_size; i ++){
 		delete this->item_pool[i];
@@ -188,7 +188,7 @@ int range::update(int _ins){
 
 	return 0;
 }
-int range::construction(vector<int>& ivec){
+int range::construction(vector<Vtype>& ivec){
 	this->pool_used = 0;
 	for(int i = 0; i < this->win_size; i ++){
 		delete this->item_pool[i];
@@ -279,7 +279,7 @@ int range::get_timestamp(){
 
 //private:
 
-int range::get_buf(int _i){
+Vtype range::get_buf(int _i){
 	return this->buf[(this->buf_h+_i) % this->win_size];
 }
 void range::new_item(ritem* _it){

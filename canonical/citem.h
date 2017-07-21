@@ -11,15 +11,15 @@
 
 class citem{
 public:
-	citem(int _val, int _ts, int _winsz);
+	citem(Vtype _val, int _ts, int _winsz);
 	~citem();
 
 	string to_str();
 	int to_size();
 	int insert_pred(citem* it);
 	int insert_succ(citem* it);
-	int enumlis(int _lis_l, int _i, citem** _S, stringstream& _ss);
-	int enumlis_constrained(int _lis_l, int _i, citem** _S, stringstream& _ss, citem** _Sstore, int _constrained, int& _value);
+	int enumlis(int _lis_l, int _i, citem** _S, stringstream& _ss, int& lis_num);
+	int enumlis_constrained(int _lis_l, int _i, citem** _S, stringstream& _ss, citem** _Sstore, int _constrained, Vtype& _value, int& lis_num);
 	bool partial(citem* it);
 	bool pred_del(int _i);
 	bool be_removed();
@@ -28,7 +28,7 @@ public:
 //	citem* get_succtail();
 	void clear_pred_succ();
 
-	int val;
+	Vtype val;
 	int rlen;
 	int timestamp;
 	bool inD;
@@ -36,7 +36,7 @@ public:
 	citem* prev;
 
 private:
-	void initial(int _val, int _ts, int _winsz);
+	void initial(Vtype _val, int _ts, int _winsz);
 
 	int win_size;
 	citem** pred;

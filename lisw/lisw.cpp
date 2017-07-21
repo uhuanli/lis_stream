@@ -25,7 +25,7 @@ lisw::lisw(int _winsz){
 	pool_head = 0;
 	pool_tail = 0;
 
-	this->buf = new int[this->win_size];
+	this->buf = new Vtype[this->win_size];
 	for(int i = 0; i < this->win_size; i ++){
 		this->buf[i] = 0;
 	}
@@ -77,7 +77,7 @@ void lisw::run(string _data_f, int _method){
 	datastream ds(_data_f);
 	while(ds.hasnext() && ds.timestamp() < this->win_size)
 	{
-		int ai = ds.next();
+		Vtype ai = ds.next();
 		this->update(ai);
 	}
 
@@ -85,7 +85,7 @@ void lisw::run(string _data_f, int _method){
 	{
 		this->t_total.begin();
 		this->t_update.begin();
-		int ai = ds.next();
+		Vtype ai = ds.next();
 		this->update(ai);
 
 		this->t_update.end();
@@ -115,7 +115,7 @@ void lisw::run_lwmicrosoft(){
 	int winsize = 10;
 	string file = "microsoft_stock.dat";
 	datastream ds(file);
-	orthogonal otg(winsize);
+	qnlist otg(winsize);
 	while(ds.hasnext())
 	{
 		int ai = ds.next();
@@ -168,7 +168,7 @@ int lisw::to_size() const{
 	sz += this->win_size*(sizeof(int*));
 	return sz;
 }
-int lisw::update(int _ins){
+int lisw::update(Vtype _ins){
 	if(this->timestamp >= this->win_size)
 	{
 		this->buf_h ++;
@@ -193,7 +193,7 @@ int lisw::update(int _ins){
 
 	return 0;
 }
-int lisw::construction(vector<int>& ivec){
+int lisw::construction(vector<Vtype>& ivec){
 	for(int i = 0; i < ivec.size(); i ++)
 	{
 		this->insert(ivec[i]);
@@ -309,7 +309,7 @@ string lisw::pool_str() const
 }
 
 /* private */
-int lisw::insert(int _new_v){
+int lisw::insert(Vtype _new_v){
 	{
 		stringstream _ss;
 		_ss << "\n\n+++++IN insert at " << this->timestamp << endl;
@@ -487,7 +487,7 @@ bool lisw::decline_alpha(){
 	return true;
 }
 
-int lisw::find_ins_pos(int _val){
+int lisw::find_ins_pos(Vtype _val){
 	for(int i = 0; i < this->lis_len; i ++)
 	{
 		if(this->principle_row[i]->val > _val) return i;
@@ -501,7 +501,7 @@ int lisw::construct(){
 	return 0;
 }
 
-int lisw::get_buf(int _i){
+Vtype lisw::get_buf(int _i){
 	return this->buf[(this->buf_h+_i) % this->win_size];
 }
 

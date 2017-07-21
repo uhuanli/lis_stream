@@ -18,7 +18,7 @@ public:
 	void run_canmicrosoft();
 
 	int update(int _ins);
-	int construction(vector<int>& ivec);
+	int construction(vector<Vtype>& ivec);
 	string to_str();
 	int to_size();
 	string seq_str();
@@ -27,11 +27,15 @@ public:
 	string maxh_str();
 	string minw_str();
 	string maxw_str();
+	string minwid_str();
+	string maxwid_str();
 
-	const static int minh = 1;
-	const static int maxh = 2;
-	const static int minw = 3;
-	const static int maxw = 4;
+	const static int maxgap = 1;
+	const static int mingap = 2;
+	const static int minwid = 3;
+	const static int maxwid = 4;
+	const static int minwei = 5;
+	const static int maxwei = 6;
 
 private:
 
@@ -70,7 +74,7 @@ private:
 	runtime t_compute;
 	runtime t_total;
 
-	int* buf;
+	Vtype* buf;
 	int buf_h;
 	int buf_t;
 };

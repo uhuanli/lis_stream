@@ -20,7 +20,34 @@
 #include<time.h>
 #include<math.h>
 #include<iomanip>
+#include <windows.h>
+#include "psapi.h"
 using namespace std;
+
+typedef double Vtype;
+
+//#define RLEN 1
+//#define QN_SEQ 1
+//#define IND_TAIL 1
+//#define QN_PREV 1
+#define OPT_SAVE 1
+#define NUM_LIS 1
+
+//#define NO_ENUM 1
+//#define ENUMSTR 1
+
+//#define DN_OPT 1
+//#define TRACK_CRASH 1
+#define LOG 1
+//#define DEBUG_TRACK 1
+
+//#define DEADCYCLE 1
+//#define STDLOG 1
+
+//#define DEMO 1
+#define ENABLE_MAX_LIS_NUM 1
+#define COUNT_LISNUM 1
+
 
 class RuntimeLis;
 class RuntimeDense;
@@ -34,6 +61,7 @@ public:
 	static char buf[buf_size];
 	static int PARALLEL_NUM;
 
+	static const long long int MAX_LIS_NUM = 1*1000*1000;
 
 	static double ACCURRACY;
 
@@ -44,6 +72,7 @@ public:
 	static bool isconsole;
 
 	static string exp_home;
+	static string dataset;
 	static ofstream flog;
 	static ofstream run_track;
 	const static bool on_num_track = false;
@@ -55,6 +84,7 @@ public:
 	static const bool write_track = false;
 	static const bool testdp = false;
 
+	static LARGE_INTEGER m_nTime;
 	static long long int get_time_cur();
 	static long cal_time(long long int _t1, long long int _t2);
 
@@ -68,6 +98,7 @@ public:
 	static void log(const char* str, const char* lat);
 	static void log(stringstream & _ss);
 	static void initial();
+	static void init_log(string _data_set);
 	static void track(const char* str, const char* lat);
 	static void track(stringstream & _ss);
 	static void num_track(const char* str, int _num);

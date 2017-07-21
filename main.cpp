@@ -16,18 +16,28 @@
 #include "range/range.h"
 #include "quadruple/quadruple.h"
 
+//#define TEST 1
+
 void construction_main(string _data_f, stringstream& _ss, int win_size);
 void console_run();
 
 int main(int argc, char* args[])
 {
-	cout << "::::main" << endl;
+
+	if(false)
+	{
+		qnlist qnl(10);
+		cout << sizeof(qnl) << ",tosz:" << qnl.to_size() << endl << endl;
+		return 0;
+	}
+//	cout << "::::main" << endl;
 	stringstream _ss;
 	for(int i = 1; i < argc; i ++)
 	{
 		_ss << args[i] << " ";
 	}
-	int win_size = 0;
+	int win_size = 15;
+	util::run_mode = 6;
 	int data_set = 0;
 
 	util::initial();
@@ -35,6 +45,11 @@ int main(int argc, char* args[])
 	if(argc >= 2)
 	{
 		_ss >> win_size;
+#ifdef TEST
+		cerr << "this is test, input key to confirm" << endl;
+		win_size = 10;
+		system("pause");
+#endif
 		_ss >> util::run_mode;
 		_ss >> data_set;
 		string _data_f;
@@ -52,33 +67,40 @@ int main(int argc, char* args[])
 			exit(-1);
 		}
 
+		util::dataset = str_dat[data_set];
 		_data_f = _data_home + str_dat[data_set];
+		util::init_log(util::dataset);
 
-		long long int total_begin = util::get_time_cur();
-		if(util::run_mode == 1){
+		if(util::run_mode == 0 || util::run_mode == 1){
 			int run_method;
 			_ss >> run_method;
+#ifdef NO_ENUM
 			{
 				if(run_method == 0) return 0;
 			}
-			orthogonal otg(win_size);
+#endif
+			qnlist qnl(win_size);
 			{
-				if(run_method == 7){
+				if(run_method == 9 || run_method == 7){
 					double _slope;
 					_ss >> _slope;
-					otg.set_slope(_slope);
+					qnl.set_slope(_slope);
 				}
-				if(run_method == 8){
+				if(run_method == 10 || run_method == 8){
 					int Li, Ui;double Lv, Uv;
 					_ss >> Li >> Ui >> Lv >> Uv;
-					otg.set_range(Li, Ui, Lv, Uv);
+					qnl.set_range(Li, Ui, Lv, Uv);
 				}
 			}
-			otg.run(run_method, _data_f);
+			qnl.run(run_method, _data_f);
 		}
 		else
 		if(util::run_mode == 2){
-			if(true) return 0;
+#ifdef NO_ENUM
+			{
+				return 0;
+			}
+#endif
 			canonical cnl(win_size);
 			cnl.run(_data_f, 0);
 		}
@@ -110,7 +132,11 @@ int main(int argc, char* args[])
 		else
 		if(util::run_mode == 6)/* LISSET-Post */
 		{
-			if(true) return 0;
+#ifdef NO_ENUM
+			{
+				return 0;
+			}
+#endif
 			int constrained_method = 0;
 			_ss >> constrained_method;
 			canonical cnl(win_size);
@@ -119,8 +145,12 @@ int main(int argc, char* args[])
 		else
 		if(util::run_mode == 7)/* Dynamic Program */
 		{
+#ifdef NO_ENUM
+			{
+				return 0;
+			}
+#endif
 			/* 0 for n^2, 1 for nlogn */
-			if(true) return 0;
 			int run_alg = 0;
 			dynprogram dp(win_size);
 			dp.run(_data_f, run_alg);
@@ -150,6 +180,7 @@ int main(int argc, char* args[])
 			range rlis(win_size, Li, Ui, Lv, Uv);
 			rlis.run(_data_f);
 		}
+
 	}
 	else
 	{
@@ -157,12 +188,74 @@ int main(int argc, char* args[])
 	}
 }
 
+void console_run()
+{
+	util::init_log("console");
+	util::isconsole = true;
+	if(util::isconsole)  /* for lisw */
+	{
+
+
+//		variant vrt(10);
+//		vrt.runmicrosoft();
+		int data_set = 0;
+		string _data_f;
+		string _data_home = util::exp_home + "dataset/";
+		string str_dat[10] = {
+				"microsoft_stock.dat",
+				"c_rand.dat",
+				"powerusage.dat",
+				"synthetic_trans.dat",
+				"gene_seq.dat"
+		};
+
+		if(data_set < 0 || data_set > 4){
+			cout << "error data set" << endl;
+			exit(-1);
+		}
+
+		util::dataset = str_dat[data_set];
+		_data_f = _data_home + str_dat[data_set];
+		int winsz = 500;
+		util::update_times = 11;
+		qnlist qnl(winsz);
+		runtime _r;
+		_r.begin();
+#ifdef DEMO
+		qnl.demo("microsoft_stock.dat", winsz);
+#else
+		qnl.run(qnlist::LIS_COUNT, _data_f);
+#endif
+		_r.end();
+//		cout << (int)_r.getsum() << endl;
+
+//		range rlis(winsz, Li, Ui, Lv, Uv);
+//		rlis.run_microsoft(winsz);
+//		minheight mh(winsz);
+//		mh.run_mhmicrosoft(winsz);
+//			cout << lw.to_size() << endl;
+	}
+
+	util::isconsole = true;
+//		qnlist qnl(10);
+//		canonical cnl(500);
+//		minheight mh(1200);
+	string stock_dat = "D:/Lab/experiments/lis_constraints/dataset/microsoft_stock.dat";
+	string crand_dat = "D:/Lab/experiments/lis_constraints/dataset/c_rand.dat";
+//		qnl.run(0, stock_dat);
+//		cnl.run(stock_dat, 0);
+//		mh.run(stock_dat);
+}
+
+
+
+
 void construction_main(string _data_f, stringstream& _ss, int win_size){
 	datastream ds(_data_f);
-	vector<int> Vds;
+	vector<Vtype> Vds;
 	while(ds.hasnext()){
 		Vds.push_back(ds.next());
-		if(Vds.size() >= win_size) break;
+		if((int)Vds.size() >= win_size) break;
 	}
 
 	cout << "read data: " << Vds.size() << "\t" << "win=" << win_size << "\t";
@@ -172,18 +265,18 @@ void construction_main(string _data_f, stringstream& _ss, int win_size){
 
 	long long int tcost = 0, isize;
 	if(run_work == 0)
-	{/*orthogonal*/
+	{/*qnlist*/
 		tcost = 0;
 		for(int i = 0; i < 5; i ++)
 		{
-			orthogonal otg(Vds.size());
+			qnlist qnl(Vds.size());
 			long long int tbegin = util::get_time_cur();
-			otg.construction(Vds);
+			qnl.construction(Vds);
 			long long int tend = util::get_time_cur();
 			tcost += util::cal_time(tend, tbegin);
-			isize = otg.to_size();
+			isize = qnl.to_size();
 		}
-		cout << "otg\tspace\t" << isize/1000.0 << "\ttime\t";
+		cout << "qnl\tspace\t" << isize/1000.0 << "\ttime\t";
 		cout << "(" << Vds.size() << ", " << tcost/1000.0 << ")" << endl;
 	}
 	else
@@ -299,34 +392,3 @@ void construction_main(string _data_f, stringstream& _ss, int win_size){
 		cout << "(" << Vds.size() << ", " << tcost/1000.0 << ")" << endl;
 	}
 }
-
-void console_run()
-{
-
-	if(true)  /* for lisw */
-	{
-//		variant vrt(10);
-//		vrt.runmicrosoft();
-		int winsz = 10;
-		orthogonal otg(winsz);
-//		otg.run(8, "microsoft_stock.dat");
-		otg.run_sloperange();
-//		range rlis(winsz, Li, Ui, Lv, Uv);
-//		rlis.run_microsoft(winsz);
-//		minheight mh(winsz);
-//		mh.run_mhmicrosoft(winsz);
-//			cout << lw.to_size() << endl;
-	}
-
-	util::isconsole = true;
-//		orthogonal otg(10);
-//		canonical cnl(500);
-//		minheight mh(1200);
-	string stock_dat = "D:/Lab/experiments/lis_constraints/dataset/microsoft_stock.dat";
-	string crand_dat = "D:/Lab/experiments/lis_constraints/dataset/c_rand.dat";
-//		otg.run(0, stock_dat);
-//		cnl.run(stock_dat, 0);
-//		mh.run(stock_dat);
-}
-
-

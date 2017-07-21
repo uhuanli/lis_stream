@@ -14,7 +14,7 @@ minheight::minheight(int _winsz){
 	this->timestamp = 0;
 	this->htail = new mh_item*[_winsz];
 	this->lis_len = 0;
-	this->buf = new int[_winsz];
+	this->buf = new Vtype[_winsz];
 	this->buf_h = 0;
 	this->buf_t = 0;
 	this->pool_used = 0;
@@ -53,11 +53,11 @@ void minheight::run(string _data_f, const bool _update_vertical){
 		file_name = _ss.str();
 		log_f += file_name;
 		if(_update_vertical){
-			label_type << "minH_v\t" << "minheight_v";
+			label_type << "minH_v\t" << "mingap_one";
 //			cout << "is v" << endl;
 //			system("pause");
 		}else{
-			label_type << "minH\t" << "minheight";
+			label_type << "minH\t" << "mingap_one";
 		}
 		label_type << "\t" << _datatype << "\t" << this->win_size;
 	}
@@ -72,7 +72,7 @@ void minheight::run(string _data_f, const bool _update_vertical){
 	datastream ds(_data_f);
 	while(ds.hasnext() && ds.timestamp() < this->win_size)
 	{
-		int ai = ds.next();
+		Vtype ai = ds.next();
 		if(_update_vertical)
 		{
 			this->update_vertical(ai);
@@ -87,7 +87,7 @@ void minheight::run(string _data_f, const bool _update_vertical){
 	{
 		this->t_total.begin();
 		this->t_update.begin();
-		int ai = ds.next();
+		Vtype ai = ds.next();
 		if(_update_vertical)
 		{
 			this->update_vertical(ai);
@@ -149,7 +149,7 @@ void minheight::run_mhmicrosoft(int _winsz){
 	string microsoft = "microsoft_stock.dat";
 	datastream ds(microsoft);
 //	minheight mh(winsize);
-	orthogonal otg(_winsz);
+	qnlist otg(_winsz);
 	while(ds.hasnext())
 	{
 		double d_next = ds.next();
@@ -273,7 +273,7 @@ string minheight::minheight_str(){
 	mh_item* it = this->htail[this->lis_len-1];
 
 	mh_item* min_h_it = it;
-	int _min_h = it->val - it->p_most->val;
+	Vtype _min_h = it->val - it->p_most->val;
 	it = it->next;
 	while(it != NULL){
 		if(it->val - it->p_most->val <= _min_h)
@@ -302,7 +302,7 @@ string minheight::minheight_str(){
 
 	return _ss.str();
 }
-int minheight::update(int _ins){
+int minheight::update(Vtype _ins){
 	this->pool_used = 0;
 	for(int i = 0; i < this->win_size; i ++){
 		delete this->item_pool[i];
@@ -324,7 +324,7 @@ int minheight::update(int _ins){
 
 	return 0;
 }
-int minheight::update_vertical(int _ins)
+int minheight::update_vertical(Vtype _ins)
 {
 	this->remove();
 	this->insert(_ins);
@@ -333,7 +333,7 @@ int minheight::update_vertical(int _ins)
 
 	return 0;
 }
-int minheight::construction(vector<int>& ivec){
+int minheight::construction(vector<Vtype>& ivec){
 	this->pool_used = 0;
 	for(int i = 0; i < this->win_size; i ++){
 		delete this->item_pool[i];
@@ -393,7 +393,7 @@ int minheight::construct(){
 	return 0;
 }
 
-int minheight::insert(int _ins)
+int minheight::insert(Vtype _ins)
 {
 	mh_item* ins = new mh_item(_ins, this->timestamp);
 	int itail = this->find_ins_pos(ins->val);
@@ -658,7 +658,7 @@ int minheight::build_pmost()
 
 	return 0;
 }
-int minheight::find_ins_pos(int _val){
+int minheight::find_ins_pos(Vtype _val){
 	int ibegin = 0;
 	int iend = this->lis_len;
 
@@ -693,7 +693,7 @@ void minheight::new_item(mh_item* _it){
 	this->item_pool[this->pool_used] = _it;
 	this->pool_used ++;
 }
-int minheight::get_buf(int _i){
+Vtype minheight::get_buf(int _i){
 	return this->buf[(this->buf_h+_i) % this->win_size];
 }
 

@@ -20,7 +20,7 @@ variant::variant(int _n){
 	this->timestamp = 0;
 	this->lis_len = 0;
 
-	this->buf = new int[this->win_size];
+	this->buf = new Vtype[this->win_size];
 	for(int i = 0; i < this->win_size; i ++){
 		this->buf[i] = 0;
 	}
@@ -46,6 +46,17 @@ void variant::run(int run_method, string _data_f, const bool _update_vertical){
 	this->t_compute.initial();
 	this->t_total.initial();
 
+	string _method[16] = {
+			"maxgap_one",
+			"mingap_one",
+			"maxwid_one",
+			"minwid_one",
+			"maxwei_one",
+			"minwei_one",
+			"maxgap",
+			"mingap"
+	};
+
 	string log_f = util::exp_home + "runningtime/";
 	string file_name;
 	stringstream label_type;
@@ -60,17 +71,17 @@ void variant::run(int run_method, string _data_f, const bool _update_vertical){
 			_ss << "[vrt]";
 		}
 
-		_ss << "_" << this->get_method(run_method) << "";
+		_ss << "_" << _method[run_method] << "";
 		_ss << "_" << _datatype << ".time";
 		_ss << "_" << this->win_size << "";
 		file_name = _ss.str();
 		log_f += file_name;
 		if(_update_vertical){
-			label_type << "vrt_v\t" << this->get_method(run_method);
+			label_type << "vrt_v\t" << _method[run_method];
 //			cout << "is v" << endl;
 //			system("pause");
 		}else{
-			label_type << "vrt\t" << this->get_method(run_method);
+			label_type << "vrt\t" << _method[run_method];
 		}
 		label_type << "\t" << _datatype << "\t" << this->win_size;
 	}
@@ -85,7 +96,7 @@ void variant::run(int run_method, string _data_f, const bool _update_vertical){
 	datastream ds(_data_f);
 	while(ds.hasnext() && ds.timestamp() < this->win_size)
 	{
-		int ai = ds.next();
+		Vtype ai = ds.next();
 		if(_update_vertical)
 		{
 			this->update_vertical(ai);
@@ -100,7 +111,7 @@ void variant::run(int run_method, string _data_f, const bool _update_vertical){
 	{
 		this->t_total.begin();
 		this->t_update.begin();
-		int ai = ds.next();
+		Vtype ai = ds.next();
 		if(_update_vertical)
 		{
 			this->update_vertical(ai);
@@ -135,11 +146,11 @@ void variant::runmicrosoft()
 	string microsoft = "microsoft_stock.dat";
 	datastream ds(microsoft);
 //	minheight mh(winsize);
-	orthogonal otg(10);
+	qnlist otg(10);
 	while(ds.hasnext())
 	{
 		double d_next = ds.next();
-		int ai = ((int)(d_next));
+		Vtype ai = ((int)(d_next));
 		{
 			stringstream _ss;
 			_ss << "ai = " << ai << "\t" << d_next << endl;
@@ -170,7 +181,7 @@ void variant::runmicrosoft()
 	cout << "end run_mhmicrosoft" << endl;
 }
 
-int variant::update(int _ins){
+int variant::update(Vtype _ins){
 	this->pool_used = 0;
 	for(int i = 0; i < this->win_size; i ++){
 		delete this->item_pool[i];
@@ -190,7 +201,7 @@ int variant::update(int _ins){
 
 	return 0;
 }
-int variant::update_vertical(int _ins)
+int variant::update_vertical(Vtype _ins)
 {
 	this->remove();
 	this->insert(_ins);
@@ -198,7 +209,7 @@ int variant::update_vertical(int _ins)
 
 	return 0;
 }
-int variant::construction(vector<int>& ivec)
+int variant::construction(vector<Vtype>& ivec)
 {
 	this->pool_used = 0;
 	for(int i = 0; i < this->win_size; i ++){
@@ -244,7 +255,7 @@ int variant::construction(vector<int>& ivec)
 
 	return 0;
 }
-int variant::insert(int _ins)
+int variant::insert(Vtype _ins)
 {
 	vitem* ins = new vitem(_ins, this->timestamp);
 	int itail = this->find_ins_pos(ins->val);
@@ -574,7 +585,7 @@ int variant::most_lm()
 	}
 	return 0;
 }
-int variant::find_ins_pos(int _val){
+int variant::find_ins_pos(Vtype _val){
 	//	int itail = 0;
 	//	while(itail < this->lis_len)
 	//	{
@@ -783,7 +794,7 @@ string variant::maxgap_one_str(bool _vertical)
 	this->most_rm();
 	vitem* it = this->htail[this->lis_len-1];
 	vitem* target_it = it;
-	int maxgap = it->val - (it->dptr_most)->val;
+	Vtype maxgap = it->val - (it->dptr_most)->val;
 	while(it->next != NULL){
 		if(maxgap <= it->val - (it->dptr_most)->val)
 		{
@@ -807,7 +818,7 @@ string variant::mingap_one_str(bool _vertical)
 	this->most_lm();
 	vitem* it = this->htail[this->lis_len-1];
 	vitem* target_it = it;
-	int mingap = it->val - (it->dptr_most)->val;
+	Vtype mingap = it->val - (it->dptr_most)->val;
 	while(it->next != NULL){
 		if(mingap >= it->val - (it->dptr_most)->val)
 		{
@@ -832,7 +843,7 @@ string variant::maxwidth_one_str(bool _vertical)
 	this->most_lm();
 	vitem* it = this->htail[this->lis_len-1];
 	vitem* target_it = it;
-	int maxwid = it->timestamp - (it->dptr_most)->timestamp;
+	Vtype maxwid = it->timestamp - (it->dptr_most)->timestamp;
 	while(it->next != NULL){
 		if(maxwid < it->timestamp - (it->dptr_most)->timestamp)
 		{
@@ -1055,7 +1066,7 @@ string variant::maxgap_str_ori(){
 
 	vitem* vit = this->htail[this->lis_len-1];
 	vitem* target_it = vit;
-	int maxGap = vit->val - vit->dptr_most->val;
+	Vtype maxGap = vit->val - vit->dptr_most->val;
 	vit = vit->next;
 	while(vit != NULL){
 		if(maxGap < vit->val - vit->dptr_most->val){
@@ -1132,7 +1143,7 @@ string variant::maxgap_one_str_ori(){
 
 	vitem* vit = this->htail[this->lis_len-1];
 	vitem* target_it = vit;
-	int maxGap = vit->val - vit->dptr_most->val;
+	Vtype maxGap = vit->val - vit->dptr_most->val;
 	vit = vit->next;
 	while(vit != NULL){
 		if(maxGap < vit->val - vit->dptr_most->val)
@@ -1215,7 +1226,7 @@ string variant::mingap_one_str_ori(){
 	}
 
 	vitem* vit = this->htail[this->lis_len-1];
-	int minGap = vit->val - (vit->dptr_most)->val;
+	Vtype minGap = vit->val - (vit->dptr_most)->val;
 	vitem* target_it = vit;
 	vit = vit->next;
 	while(vit != NULL)
@@ -1417,32 +1428,32 @@ string variant::compute_str(int run_method, const bool _vertical){
 	{
 		case 0:
 		{
-			_ss_comp << "--maxweight:" << endl << this->maxweight_str(_vertical) << endl;
+			_ss_comp << "--maxgap_one:" << endl << this->maxgap_one_str(_vertical) << endl;
 			break;
 		}
 		case 1:
 		{
-			_ss_comp << "--minweight:" << endl << this->minweight_str(_vertical) << endl;
+			_ss_comp << "--mingap_one:" << endl << this->mingap_one_str(_vertical) << endl;
 			break;
 		}
 		case 2:
 		{
-			_ss_comp << "--maxgap_one:" << endl << this->maxgap_one_str(_vertical) << endl;
+			_ss_comp << "--maxwid_one:" << endl << this->maxwidth_one_str(_vertical) << endl;
 			break;
 		}
 		case 3:
 		{
-			_ss_comp << "--mingap_one:" << endl << this->mingap_one_str(_vertical) << endl;
+			_ss_comp << "--minwid_one:" << endl << this->minwidth_one_str(_vertical) << endl;
 			break;
 		}
 		case 4:
 		{
-			_ss_comp << "--maxwid_one:" << endl << this->maxwidth_one_str(_vertical) << endl;
+			_ss_comp << "--maxweight:" << endl << this->maxweight_str(_vertical) << endl;
 			break;
 		}
 		case 5:
 		{
-			_ss_comp << "--minwid_one:" << endl << this->minwidth_one_str(_vertical) << endl;
+			_ss_comp << "--minweight:" << endl << this->minweight_str(_vertical) << endl;
 			break;
 		}
 		case 6:
@@ -1460,20 +1471,11 @@ string variant::compute_str(int run_method, const bool _vertical){
 	return _ss_comp.str();
 }
 string variant::get_method(int _i){
-	string _method[16] = {
-			"maxweight",
-			"minweight",
-			"maxgap_one",
-			"mingap_one",
-			"maxwid_one",
-			"minwid_one",
-			"maxgap",
-			"mingap"
-	};
 
-	return _method[_i];
+
+	return "deprecated";
 }
-int variant::get_buf(int _i){
+Vtype variant::get_buf(int _i){
 	return this->buf[(this->buf_h+_i) % this->win_size];
 }
 void variant::new_item(vitem* _it){

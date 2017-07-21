@@ -12,7 +12,7 @@
 //	this->drop_out_d = -1;
 //	this->drop_out_alpha = -1;
 //}
-lw_item::lw_item(int _val, int _ts, int _d, int _alpha, int _win)
+lw_item::lw_item(Vtype _val, int _ts, int _d, int _alpha, int _win)
 {
 	this->val = _val;
 	this->timestamp = _ts;

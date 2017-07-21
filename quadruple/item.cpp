@@ -6,7 +6,7 @@
  */
 #include "../quadruple/item.h"
 
-item::item(int _a, int _ts){
+item::item(double _a, int _ts){
 	this->initial(_a, _ts);
 }
 item::item(){
@@ -15,7 +15,7 @@ item::item(){
 item::~item(){
 
 }
-void item::initial(int _a, int _ts){
+void item::initial(double _a, int _ts){
 	this->un = NULL;
 	this->dn = NULL;
 	this->ln = NULL;
@@ -28,7 +28,13 @@ void item::initial(int _a, int _ts){
 	this->black = false;
 	this->timestamp = _ts;
 	this->val = _a;
+#ifdef RLEN
 	this->rlen = 0;
+#endif
+
+#ifdef COUNT_LISNUM
+	this->is_num = 0;
+#endif
 }
 
 string item::to_str(){
@@ -57,9 +63,11 @@ string item::to_str(){
 	}else{
 		_ss << "-1, ";
 	}
-
+#ifdef RLEN
 	_ss << "r=" << this->rlen << ", ";
-	_ss << "black:" << this->black << "]";
+#endif
+	//_ss << "black:" << this->black << "]";
+	_ss << "time:" << this->timestamp << "]";
 
 	return _ss.str();
 }
@@ -84,12 +92,14 @@ item* item::child_lm(){
 	if(this->un == NULL){
 		cout << "err called" << endl;
 		cout << "val=" << this->val << endl;
+#ifdef RLEN
 		cout << "rlen=" << this->rlen << endl;
+#endif
 		system("pause");
 		return NULL;
 	}
 	item* it = this->un;
-	while(it ->ln != NULL)
+	while(it->ln != NULL)
 	{
 		if((it->ln)->partial(this)){
 			it = it->ln;
@@ -99,3 +109,23 @@ item* item::child_lm(){
 	}
 	return it;
 }
+#ifdef COUNT_LISNUM
+double item::count_is_num()
+{
+	this->is_num = 0;
+	item* it = this->un;
+	while(it != NULL)
+	{
+		if((it)->partial(this)){
+			this->is_num += it->is_num;
+			it = it->ln;
+		}else{
+			break;
+		}
+	}
+
+	if(this->is_num == 0) this->is_num = 1;
+
+	return this->is_num;
+}
+#endif

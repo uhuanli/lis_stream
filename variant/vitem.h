@@ -11,14 +11,14 @@
 
 class vitem{
 public:
-	vitem(int _v, int _ts);
+	vitem(Vtype _v, int _ts);
 	~vitem();
 
 	bool partial(vitem* vit);
 	string to_str();
 	int to_size();
 
-	int val;
+	Vtype val;
 	vitem* ptr;
 	vitem* dptr_most;
 	vitem* rn;

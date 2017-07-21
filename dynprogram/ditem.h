@@ -13,6 +13,7 @@
 #include<sstream>
 #include<string.h>
 using namespace std;
+#include "../util/util.h"
 
 class ditem
 {
@@ -24,11 +25,11 @@ public:
 	int to_size();
 	int prenum();
 
-	void enumlis(int _lis_l, int _i, ditem** _S, stringstream& _ss);
+	void enumlis(int _lis_l, int _i, ditem** _S, stringstream& _ss, int& _cur_lisnum);
 	ditem* get_pre(int _i);
 	void add_pre(ditem* _pre);
 
-	int val;
+	Vtype val;
 	int rlen;
 	int winsz;
 	int timestamp;

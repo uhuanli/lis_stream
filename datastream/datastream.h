@@ -10,6 +10,7 @@
 #include<iostream>
 #include<fstream>
 #include<stdlib.h>
+#include<vector>
 using namespace std;
 class datastream{
 public:
@@ -19,7 +20,7 @@ public:
 	bool hasnext();
 	double next();
 	int timestamp();
-
+	void to_vec(vector<double>& _data);
 private:
 	ifstream fin;
 	int ts;

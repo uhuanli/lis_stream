@@ -19,8 +19,8 @@ public:
 	void run_stream();
 	void run_microsoft(int _winsz);
 
-	int update(int _ins);
-	int construction(vector<int>& ivec);
+	int update(Vtype _ins);
+	int construction(vector<Vtype>& ivec);
 
 	int LISlength();
 	string to_str();
@@ -34,14 +34,14 @@ private:
 	int win_size;
 	double m_slope;
 
-	int get_buf(int _i);
+	Vtype get_buf(int _i);
 	void new_item(sitem* _it);
 	int construct();
-	int insert(int _ins);
+	int insert(Vtype _ins);
 	int remove();
-	int find_rank_j(int _val, int _i);
+	int find_rank_j(Vtype _val, int _i);
 
-	bool check_slope(int v1, int t1, int v2, int t2);
+	bool check_slope(Vtype v1, int t1, Vtype v2, int t2);
 
 	sitem** htail;
 	int lis_len;
@@ -62,7 +62,7 @@ private:
 	runtime t_compute;
 	runtime t_total;
 
-	int* buf;
+	Vtype* buf;
 	int buf_h;
 	int buf_t;
 };

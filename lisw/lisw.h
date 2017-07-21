@@ -23,8 +23,8 @@ public:
 
 	int LISlength() const;
 	int to_size() const;
-	int update(int _ins);
-	int construction(vector<int>& ivec);
+	int update(Vtype _ins);
+	int construction(vector<Vtype>& ivec);
 
 	string to_str() const;
 	string lis_str() const;
@@ -32,7 +32,7 @@ public:
 	string pool_str() const;
 
 private:
-	int insert(int _new_v);
+	int insert(Vtype _new_v);
 	bool build_parents(int _ins_pos);
 	/*
 	 * decrease each in d by 1
@@ -44,9 +44,9 @@ private:
 	int decline_d();
 	bool decline_alpha();
 
-	int find_ins_pos(int _val);
+	int find_ins_pos(Vtype _val);
 	int construct();
-	int get_buf(int _i);
+	Vtype get_buf(int _i);
 
 	lw_item* get_item(int _i) const;
 	bool addpool(lw_item* _lw_i);
@@ -74,7 +74,7 @@ private:
 	runtime t_compute;
 	runtime t_total;
 
-	int* buf;
+	Vtype* buf;
 	int buf_h;
 	int buf_t;
 };

@@ -22,11 +22,11 @@ using namespace std;
 
 class item{
 public:
-	item(int _a, int _ts);
+	item(double _a, int _ts);
 	item();
 	~item();
 
-	void initial(int _a, int _ts);
+	void initial(double _a, int _ts);
 	string to_str();
 	int to_size();
 	bool partial(item* a);
@@ -44,8 +44,15 @@ public:
 #endif
 	bool black;
 	int timestamp;
-	int val;
+	double val;
+#ifdef COUNT_LISNUM
+	double is_num;
+	double count_is_num();
+#endif
+
+#ifdef RLEN
 	int rlen;
+#endif
 };
 
 

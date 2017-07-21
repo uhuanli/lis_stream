@@ -15,7 +15,7 @@ dynprogram::dynprogram(int _winsz)
 	this->win_size = _winsz;
 	this->timestamp = 0;
 	this->lis_len = 0;
-	this->buf = new int[_winsz];
+	this->buf = new Vtype[_winsz];
 	this->buf_h = 0;
 	this->buf_t = 0;
 	this->run_method = -1;
@@ -70,7 +70,7 @@ void dynprogram::run(string _data_f, int _method)
 	datastream ds(_data_f);
 	while(ds.hasnext() && ds.timestamp() < this->win_size)
 	{
-		int ai = ds.next();
+		Vtype ai = ds.next();
 		this->update(ai);
 	}
 
@@ -78,7 +78,7 @@ void dynprogram::run(string _data_f, int _method)
 	{
 		this->t_total.begin();
 		this->t_update.begin();
-		int ai = ds.next();
+		Vtype ai = ds.next();
 		this->update(ai);
 
 		this->t_update.end();
@@ -103,7 +103,7 @@ void dynprogram::run_dpmicrosoft()
 	int winsize = 10;
 	string file = "microsoft_stock.dat";
 	datastream ds(file);
-	orthogonal otg(winsize);
+	qnlist otg(winsize);
 	while(ds.hasnext())
 	{
 		int ai = ds.next();
@@ -187,12 +187,17 @@ string dynprogram::enum_str()
 	stringstream _ss;
 	ditem** S = new ditem*[this->lis_len];
 
+	int _cur_lisnum = 0;
 	for(int i = this->pool_used-1; i >= 0 ; i --)
 	{
 		ditem* dit = this->get_item(i);
 		if(dit->rlen == this->lis_len)
 		{
-			dit->enumlis(this->lis_len, 0, S, _ss);
+			dit->enumlis(this->lis_len, 0, S, _ss, _cur_lisnum);
+#ifdef ENABLE_MAX_LIS_NUM
+			if(_cur_lisnum > util::MAX_LIS_NUM)
+				break;
+#endif
 		}
 	}
 
@@ -201,7 +206,7 @@ string dynprogram::enum_str()
 }
 
 // private
-int dynprogram::get_buf(int _i){
+Vtype dynprogram::get_buf(int _i){
 	return this->buf[(this->buf_h+_i) % this->win_size];
 }
 ditem* dynprogram::get_item(int _i){
@@ -216,7 +221,7 @@ void dynprogram::new_item(ditem* _it){
 	this->item_pool[this->pool_used] = _it;
 	this->pool_used ++;
 }
-int dynprogram::update(int _ins)
+int dynprogram::update(Vtype _ins)
 {
 	this->pool_used = 0;
 	for(int i = 0; i < this->win_size; i ++){
@@ -239,7 +244,7 @@ int dynprogram::update(int _ins)
 
 	return 0;
 }
-int dynprogram::construction(vector<int>& ivec){
+int dynprogram::construction(vector<Vtype>& ivec){
 	this->pool_used = 0;
 	for(int i = 0; i < this->win_size; i ++){
 		delete this->item_pool[i];
@@ -304,7 +309,7 @@ int dynprogram::construct(){
 
 	return 0;
 }
-int dynprogram::find_ins_pos(int _val){
+int dynprogram::find_ins_pos(Vtype _val){
 	int ibegin = 0;
 	int iend = this->lis_len;
 

@@ -15,9 +15,9 @@ public:
 	~variant();
 	void run(int run_method, string _data_f, const bool _update_vertical);
 	void runmicrosoft();
-	int update(int _ins);
-	int update_vertical(int _ins);
-	int construction(vector<int>& ivec);
+	int update(Vtype _ins);
+	int update_vertical(Vtype _ins);
+	int construction(vector<Vtype>& ivec);
 	string to_str();
 	int to_size();
 	string all_str();
@@ -44,16 +44,16 @@ private:
 	int timestamp;
 	int win_size;
 
-	int find_ins_pos(int _val);
+	int find_ins_pos(Vtype _val);
 	string compute_str(int run_method, const bool _vertical);
 	string get_method(int _i);
-	int get_buf(int _i);
+	Vtype get_buf(int _i);
 	void new_item(vitem* _it);
 	vitem* getRM(int _i, vitem* _cur);
 
 	int h_adjust();
 	int v_adjust();
-	int insert(int _ins);
+	int insert(Vtype _ins);
 	int remove();
 
 	string one_str(vitem* start);
@@ -80,7 +80,7 @@ private:
 	runtime t_compute;
 	runtime t_total;
 
-	int* buf;
+	Vtype* buf;
 	int buf_h;
 	int buf_t;
 };

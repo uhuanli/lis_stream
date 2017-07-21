@@ -12,10 +12,11 @@
 #include<sstream>
 #include<fstream>
 using namespace std;
+#include "../util/util.h"
 class lw_item{
 public:
 //	lw_item();
-	lw_item(int _val, int _ts, int _d, int _alpha, int _win);
+	lw_item(Vtype _val, int _ts, int _d, int _alpha, int _win);
 	~lw_item();
 
 	string to_str();
@@ -24,7 +25,7 @@ public:
 
 	lw_item** parents;
 	int win_size;
-	int val;
+	Vtype val;
 	int timestamp;
 
 	int drop_out_d;

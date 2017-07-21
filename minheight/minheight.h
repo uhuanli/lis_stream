@@ -10,6 +10,7 @@
 
 #include "mh_item.h"
 #include "../util/runtime.h"
+#include "../util/util.h"
 #include<iostream>
 using namespace std;
 
@@ -26,19 +27,19 @@ public:
 	int to_size();
 	string seq_str();
 	string minheight_str();
-	int update(int _ins);
-	int update_vertical(int _ins);
-	int construction(vector<int>& ivec);
+	int update(Vtype _ins);
+	int update_vertical(Vtype _ins);
+	int construction(vector<Vtype>& ivec);
 private:
-	int get_buf(int _i);
+	Vtype get_buf(int _i);
 	void new_item(mh_item* _it);
 	int construct();
-	int find_ins_pos(int _val);
+	int find_ins_pos(Vtype _val);
 	int get_minheight();
 
 	int h_adjust();
 	int v_adjust();
-	int insert(int _ins);
+	int insert(Vtype _ins);
 	int remove();
 	int build_pmost();
 
@@ -62,7 +63,7 @@ private:
 	runtime t_compute;
 	runtime t_total;
 
-	int* buf;
+	Vtype* buf;
 	int buf_h;
 	int buf_t;
 };

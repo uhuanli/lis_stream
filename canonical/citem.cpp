@@ -6,7 +6,7 @@
  */
 #include "citem.h"
 #include "canonical.h"
-citem::citem(int _val, int _ts, int _winsz){
+citem::citem(Vtype _val, int _ts, int _winsz){
 	this->initial(_val, _ts, _winsz);
 }
 citem::~citem(){
@@ -64,14 +64,17 @@ int citem::insert_succ(citem* it){
 	return 0;
 }
 
-int citem::enumlis(int _lis_l, int _i, citem** _S, stringstream& _ss){
+int citem::enumlis(int _lis_l, int _i, citem** _S, stringstream& _ss, int& lis_num){
 	_S[_i] = this;
 	if(_i == _lis_l -1)
 	{
+		/*
 		for(int i = _lis_l-1; i >= 0; i --)
 		{
 			_ss << "\t" << _S[i]->val;
 		}
+		*/
+		lis_num ++;
 		_ss << endl;
 		return 0;
 	}
@@ -82,23 +85,37 @@ int citem::enumlis(int _lis_l, int _i, citem** _S, stringstream& _ss){
 		if(! child->partial(this)){
 			break;
 		}
-		child->enumlis(_lis_l, _i+1, _S, _ss);
+		child->enumlis(_lis_l, _i+1, _S, _ss, lis_num);
+#ifdef ENABLE_MAX_LIS_NUM
+		if(lis_num > util::MAX_LIS_NUM)
+		{
+			break;
+		}
+#endif
+
 		child = child->prev;
 	}
 	return 0;
 }
 
-int citem::enumlis_constrained(int _lis_l, int _i, citem** _S, stringstream& _ss, citem** _Sstore, int _constrained, int& _value){
+int citem::enumlis_constrained(int _lis_l, int _i, citem** _S, stringstream& _ss, citem** _Sstore, int _constrained, Vtype& _value, int& lis_num){
 	_S[_i] = this;
 	if(_i == _lis_l -1)
 	{
-		if(_constrained == canonical::minh)/* min height */
+#ifdef ENABLE_MAX_LIS_NUM
+		if(lis_num++ > util::MAX_LIS_NUM) return 0;
+#endif
+
+#ifdef ENUMSTR
+		for(int i = _lis_l-1; i >= 0; i --)
 		{
-			for(int i = _lis_l-1; i >= 0; i --)
-			{
-				_ss << "\t" << _S[i]->val;
-			}
-			int min_h = _S[0] - _S[_lis_l-1];
+			_ss << "\t" << _S[i]->val;
+		}
+#endif
+		if(_constrained == canonical::mingap)/* min height */
+		{
+
+			Vtype min_h = _S[0] - _S[_lis_l-1];
 			if(_value > min_h)
 			{
 				for(int i = _lis_l-1; i >= 0; i --)
@@ -110,13 +127,10 @@ int citem::enumlis_constrained(int _lis_l, int _i, citem** _S, stringstream& _ss
 			_ss << endl;
 		}
 		else
-		if(_constrained == canonical::maxh)/* max height */
+		if(_constrained == canonical::maxgap)/* max height */
 		{
-			for(int i = _lis_l-1; i >= 0; i --)
-			{
-				_ss << "\t" << _S[i]->val;
-			}
-			int max_h = _S[0] - _S[_lis_l-1];
+
+			Vtype max_h = _S[0] - _S[_lis_l-1];
 			if(_value < max_h)
 			{
 				for(int i = _lis_l-1; i >= 0; i --)
@@ -128,9 +142,9 @@ int citem::enumlis_constrained(int _lis_l, int _i, citem** _S, stringstream& _ss
 			_ss << endl;
 		}
 		else
-		if(_constrained == canonical::minw)/* min weight */
+		if(_constrained == canonical::minwei)/* min weight */
 		{
-			int min_w = 0;
+			Vtype min_w = 0;
 			for(int i = _lis_l-1; i >= 0; i --)
 			{
 				min_w += _S[i]->val;
@@ -146,9 +160,9 @@ int citem::enumlis_constrained(int _lis_l, int _i, citem** _S, stringstream& _ss
 			_ss << endl;
 		}
 		else
-		if(_constrained == canonical::maxw)/* max weight */
+		if(_constrained == canonical::maxwei)/* max weight */
 		{
-			int max_w = 0;
+			Vtype max_w = 0;
 			for(int i = _lis_l-1; i >= 0; i --)
 			{
 				max_w += _S[i]->val;
@@ -163,6 +177,36 @@ int citem::enumlis_constrained(int _lis_l, int _i, citem** _S, stringstream& _ss
 			}
 			_ss << endl;
 		}
+		else
+		if(_constrained == canonical::minwid)/* min width */
+		{
+			Vtype min_wid = 0;
+			min_wid = _S[_lis_l-1]->timestamp - _S[0]->timestamp;
+			if(_value > min_wid)
+			{
+				for(int i = _lis_l-1; i >= 0; i --)
+				{
+					_Sstore[i]->val = _S[i]->val;
+				}
+				_value = min_wid;
+			}
+			_ss << endl;
+		}
+		else
+		if(_constrained == canonical::maxwid)/* max width */
+		{
+			Vtype max_wid = 0;
+			max_wid = _S[_lis_l-1]->timestamp - _S[0]->timestamp;
+			if(_value < max_wid)
+			{
+				for(int i = _lis_l-1; i >= 0; i --)
+				{
+					_Sstore[i]->val = _S[i]->val;
+				}
+				_value = max_wid;
+			}
+			_ss << endl;
+		}
 		return 0;
 	}
 
@@ -172,7 +216,11 @@ int citem::enumlis_constrained(int _lis_l, int _i, citem** _S, stringstream& _ss
 		if(! child->partial(this)){
 			break;
 		}
-		child->enumlis(_lis_l, _i+1, _S, _ss);
+		child->enumlis(_lis_l, _i+1, _S, _ss, lis_num);
+#ifdef ENABLE_MAX_LIS_NUM
+		if(lis_num > util::MAX_LIS_NUM) break;
+#endif
+
 		child = child->prev;
 	}
 	return 0;
@@ -215,7 +263,7 @@ void citem::clear_pred_succ(){
 	}
 }
 
-void citem::initial(int _val, int _ts, int _winsz){
+void citem::initial(Vtype _val, int _ts, int _winsz){
 	this->win_size = _winsz;
 	this->val = _val;
 	this->rlen = -1;

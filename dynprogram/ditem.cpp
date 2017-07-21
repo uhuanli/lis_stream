@@ -57,7 +57,7 @@ int ditem::prenum(){
 	return this->pre_num;
 }
 
-void ditem::enumlis(int _lis_l, int _i, ditem** _S, stringstream& _ss){
+void ditem::enumlis(int _lis_l, int _i, ditem** _S, stringstream& _ss, int& _cur_lisnum){
 	_S[_i] = this;
 	if(_i == _lis_l -1)
 	{
@@ -75,10 +75,13 @@ void ditem::enumlis(int _lis_l, int _i, ditem** _S, stringstream& _ss){
 		}
 		else
 		{
+			/*
 			for(int i = _lis_l-1; i >= 0; i --)
 			{
 				_ss << "\t" << _S[i]->val;
 			}
+			*/
+			_cur_lisnum ++;
 			_ss << endl;
 		}
 		return ;
@@ -87,7 +90,11 @@ void ditem::enumlis(int _lis_l, int _i, ditem** _S, stringstream& _ss){
 	for(int i = 0; i < this->pre_num; i ++)
 	{
 		ditem* dchild = this->get_pre(i);
-		dchild->enumlis(_lis_l, _i+1, _S, _ss);
+		dchild->enumlis(_lis_l, _i+1, _S, _ss, _cur_lisnum);
+#ifdef ENABLE_MAX_LIS_NUM
+		if(_cur_lisnum > util::MAX_LIS_NUM)
+			break;
+#endif
 	}
 
 	return ;

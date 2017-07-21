@@ -13,7 +13,7 @@ slope::slope(int win_sz, double _slope){
 	this->timestamp = 0;
 	this->htail = new sitem*[win_sz];
 	this->lis_len = 0;
-	this->buf = new int[win_sz];
+	this->buf = new Vtype[win_sz];
 	this->buf_h = 0;
 	this->buf_t = 0;
 	this->pool_used = 0;
@@ -111,7 +111,7 @@ void slope::run_microsoft(int _winsz){
 	string dataset = powerusage;
 	datastream ds(dataset);
 	int winsize = 10;
-	orthogonal otg(_winsz);
+	qnlist otg(_winsz);
 	int count_diff = 0;
 	int count_total = 0;
 	while(ds.hasnext())
@@ -160,7 +160,7 @@ void slope::run_microsoft(int _winsz){
 	cout.flush();
 }
 
-int slope::update(int _ins){
+int slope::update(Vtype _ins){
 	this->pool_used = 0;
 	for(int i = 0; i < this->win_size; i ++){
 		delete this->item_pool[i];
@@ -182,7 +182,7 @@ int slope::update(int _ins){
 
 	return 0;
 }
-int slope::construction(vector<int>& ivec){
+int slope::construction(vector<Vtype>& ivec){
 	this->pool_used = 0;
 	for(int i = 0; i < this->win_size; i ++){
 		delete this->item_pool[i];
@@ -265,7 +265,7 @@ int slope::get_timestamp(){
 
 //private:
 
-int slope::get_buf(int _i){
+Vtype slope::get_buf(int _i){
 	return this->buf[(this->buf_h+_i) % this->win_size];
 }
 void slope::new_item(sitem* _it){
@@ -311,13 +311,13 @@ int slope::construct(){
 
 	return 0;
 }
-int slope::insert(int _ins){
+int slope::insert(Vtype _ins){
 	return 0;
 }
 int slope::remove(){
 	return 0;
 }
-int slope::find_rank_j(int _val, int _i){
+int slope::find_rank_j(Vtype _val, int _i){
 	int i_ins = 0;
 	for(int i = 0; i < this->lis_len; i ++)
 	{
@@ -332,7 +332,7 @@ int slope::find_rank_j(int _val, int _i){
 	return i_ins;
 }
 
-bool slope::check_slope(int v1, int t1, int v2, int t2)
+bool slope::check_slope(Vtype v1, int t1, Vtype v2, int t2)
 {
 	if(t1 <= t2){
 		cout << "error" << endl;
